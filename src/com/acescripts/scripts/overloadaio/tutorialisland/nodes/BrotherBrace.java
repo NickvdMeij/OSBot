@@ -1,25 +1,20 @@
 package com.acescripts.scripts.overloadaio.tutorialisland.nodes;
 
+import com.acescripts.scripts.overloadaio.OverloadAIO;
 import com.acescripts.scripts.overloadaio.framework.Constants;
 import com.acescripts.scripts.overloadaio.framework.Node;
-import com.acescripts.scripts.overloadaio.tutorialisland.methods.TutorialIslandMethods;
 import org.osbot.rs07.api.map.Position;
 import org.osbot.rs07.api.model.Entity;
 import org.osbot.rs07.api.model.NPC;
 import org.osbot.rs07.api.ui.RS2Widget;
 import org.osbot.rs07.api.ui.Tab;
-import org.osbot.rs07.script.Script;
-import org.osbot.rs07.utility.ConditionalSleep;
 
 /**
  * Created by Transporter on 07/08/2016 at 02:14.
  */
 
 public class BrotherBrace extends Node {
-
-    private TutorialIslandMethods tutorialIslandMethods = new TutorialIslandMethods(script);
-
-    public BrotherBrace(Script script) {
+    public BrotherBrace(OverloadAIO script) {
         super(script);
     }
 
@@ -27,7 +22,7 @@ public class BrotherBrace extends Node {
         NPC npc = script.getNpcs().closest("Brother Brace");
 
         if(npc != null && script.map.canReach(npc)) {
-            tutorialIslandMethods.interactWithNpc("Brother Brace", "Talk-to");
+            methods.interactWithNpc("Brother Brace", "Talk-to");
         } else {
             if(script.map.canReach(new Position(3128, 3107, 0))) {
                 script.walking.walk(new Position(3128, 3107, 0));
@@ -35,7 +30,7 @@ public class BrotherBrace extends Node {
                 Entity object = script.objects.closest("Large door");
 
                 if(object != null && script.myPosition().distance(object) < 5) {
-                    tutorialIslandMethods.interactWithObject("Large door", "Open");
+                    methods.interactWithObject("Large door", "Open");
                 } else {
                     script.walking.walk(new Position(3129, 3107, 0));
                 }
@@ -59,33 +54,33 @@ public class BrotherBrace extends Node {
         if(widget != null && widget.isVisible()) {
             switch (widget.getMessage()) {
                 case Constants.WidgetText.TALK_TO_BROTHER_BRACE_START:
-                    tutorialIslandMethods.setStatus("Talking to Brother Brace.");
+                    script.setStatus("Talking to Brother Brace.");
                     talkToNpc();
                     break;
                 case Constants.WidgetText.OPENING_PRAYER:
-                    tutorialIslandMethods.setStatus("Opening Prayer Tab.");
+                    script.setStatus("Opening Prayer Tab.");
                     script.getTabs().open(Tab.PRAYER);
                     break;
                 case Constants.WidgetText.TALK_TO_BROTHER_BRACE_PRAYER:
                 case Constants.WidgetText.TALK_TO_BROTHER_BRACE_IGNORE:
-                    tutorialIslandMethods.setStatus("Talking to Brother Brace.");
-                    tutorialIslandMethods.interactWithNpc("Brother Brace", "Talk-to");
+                    script.setStatus("Talking to Brother Brace.");
+                    methods.interactWithNpc("Brother Brace", "Talk-to");
                     break;
                 case Constants.WidgetText.OPENING_FRIENDS:
-                    tutorialIslandMethods.setStatus("Opening Friends Tab.");
+                    script.setStatus("Opening Friends Tab.");
                     script.getTabs().open(Tab.FRIENDS);
                     break;
                 case Constants.WidgetText.OPENING_IGNORES:
-                    tutorialIslandMethods.setStatus("Opening Ignore Tab.");
+                    script.setStatus("Opening Ignore Tab.");
                     script.getTabs().open(Tab.IGNORES);
                     break;
                 case Constants.WidgetText.OPEN_BROTHER_BRACE_EXIT:
-                    tutorialIslandMethods.setStatus("Opening Door.");
-                    tutorialIslandMethods.interactWithObject("Door", Constants.Objects.BROTHER_BRACE_DOOR_POSITION, "Open");
+                    script.setStatus("Opening Door.");
+                    methods.interactWithObject("Door", Constants.Objects.BROTHER_BRACE_DOOR_POSITION, "Open");
                     break;
             }
         } else {
-            tutorialIslandMethods.clickContinue();
+            methods.clickContinue();
         }
     }
 

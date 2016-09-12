@@ -1,15 +1,14 @@
 package com.acescripts.scripts.overloadaio.tutorialisland.nodes;
 
+import com.acescripts.scripts.overloadaio.OverloadAIO;
 import com.acescripts.scripts.overloadaio.framework.Constants;
 import com.acescripts.scripts.overloadaio.framework.Node;
-import com.acescripts.scripts.overloadaio.tutorialisland.methods.TutorialIslandMethods;
 import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.map.Position;
 import org.osbot.rs07.api.model.NPC;
 import org.osbot.rs07.api.ui.RS2Widget;
 import org.osbot.rs07.api.ui.Spells;
 import org.osbot.rs07.api.ui.Tab;
-import org.osbot.rs07.script.Script;
 import org.osbot.rs07.utility.ConditionalSleep;
 
 import java.util.Random;
@@ -18,10 +17,7 @@ import java.util.Random;
  * Created by Transporter on 07/08/2016 at 02:20.
  */
 public class MagicInstructor extends Node {
-
-    private TutorialIslandMethods tutorialIslandMethods = new TutorialIslandMethods(script);
-
-    public MagicInstructor(Script script) {
+    public MagicInstructor(OverloadAIO script) {
         super(script);
     }
 
@@ -29,7 +25,7 @@ public class MagicInstructor extends Node {
         NPC npc = script.getNpcs().closest("Magic Instructor");
 
         if(npc != null) {
-            tutorialIslandMethods.interactWithNpc("Magic Instructor", "Talk-to");
+            methods.interactWithNpc("Magic Instructor", "Talk-to");
         } else {
             script.walking.walk(new Position(3141, 3086, 0));
         }
@@ -37,7 +33,7 @@ public class MagicInstructor extends Node {
 
     private void walkToWindStrikeTile(int x, int y) {
         if(!script.myPosition().equals(new Position(x, y, 0))) {
-            tutorialIslandMethods.walkExact(script, new Position(x, y, 0));
+            methods.walkExact(script, new Position(x, y, 0));
             new ConditionalSleep(3500) {
                 @Override
                 public boolean condition() {
@@ -99,29 +95,29 @@ public class MagicInstructor extends Node {
         if(widget != null && widget.isVisible()) {
             switch (widget.getMessage()) {
                 case Constants.WidgetText.TALK_TO_MAGIC_INSTRUCTOR_START:
-                    tutorialIslandMethods.setStatus("Talking to Magic Instructor.");
+                    script.setStatus("Talking to Magic Instructor.");
                     talkToNpc();
                     break;
                 case Constants.WidgetText.OPENING_MAGIC:
-                    tutorialIslandMethods.setStatus("Opening Magic Tab.");
+                    script.setStatus("Opening Magic Tab.");
                     script.getTabs().open(Tab.MAGIC);
                     break;
                 case Constants.WidgetText.TALK_TO_MAGIC_INSTRUCTOR_MAGIC:
-                    tutorialIslandMethods.setStatus("Talking to Magic Instructor.");
-                    tutorialIslandMethods.interactWithNpc("Magic Instructor", "Talk-to");
+                    script.setStatus("Talking to Magic Instructor.");
+                    methods.interactWithNpc("Magic Instructor", "Talk-to");
                     break;
             }
         } else if(widgetTwo != null && widgetTwo.isVisible()) {
             switch(widgetTwo.getMessage()) {
                 case Constants.WidgetText.CAST_WIND_STRIKE:
-                    tutorialIslandMethods.setStatus("Casting Wind Strike.");
+                    script.setStatus("Casting Wind Strike.");
                     castWindStrike("Chicken");
                     break;
             }
         } else if(script.getDialogues().isPendingOption()) {
             script.getDialogues().selectOption("Yes.");
         } else {
-            tutorialIslandMethods.clickContinue();
+            methods.clickContinue();
         }
     }
 

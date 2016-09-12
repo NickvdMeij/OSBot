@@ -7,35 +7,24 @@ import com.acescripts.scripts.overloadaio.gui.panels.FishingPanel;
 import com.acescripts.scripts.overloadaio.gui.panels.WoodcuttingPanel;
 import com.acescripts.scripts.overloadaio.tutorialisland.TutorialIslandTask;
 import org.osbot.rs07.api.map.Area;
-import org.osbot.rs07.script.Script;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-import javax.imageio.ImageIO;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
     /**
      * MAIN.
      */
-    public static JPanel contentPane;
+    public JPanel contentPane = new JPanel();
     private JLabel skillHeaderLabel;
 
     /**
@@ -76,8 +65,8 @@ public class GUI extends JFrame {
      * TASK TABLE.
      */
 
-    public static JTable table;
-    public static DefaultTableModel model;
+    public JTable table;
+    public DefaultTableModel model;
 
     private void loadImage(String fullUrlPath, JButton buttonName) {
         try {
@@ -132,25 +121,23 @@ public class GUI extends JFrame {
 
     private void setButtonOption(String skillName, JButton buttonName) {
         skillHeaderLabel.setText(skillName);
-        //if(CombatPanel.panel != null && CombatPanel.panel.isVisible()) {
-        //    CombatPanel.panel.setVisible(false);
-        //}
 
-        if(WoodcuttingPanel.panel != null && WoodcuttingPanel.panel.isVisible()) {
-            WoodcuttingPanel.panel.setVisible(false);
+        if(woodcuttingPanel != null && woodcuttingPanel.getPanel().isVisible()) {
+            woodcuttingPanel.getPanel().setVisible(false);
         }
 
-        if(FiremakingPanel.panel != null && FiremakingPanel.panel.isVisible()) {
-            FiremakingPanel.panel.setVisible(false);
+        if(firemakingPanel != null && firemakingPanel.getPanel().isVisible()) {
+            firemakingPanel.getPanel().setVisible(false);
         }
 
-        if(FishingPanel.panel != null && FishingPanel.panel.isVisible()) {
-            FishingPanel.panel.setVisible(false);
+        if(fishingPanel != null && fishingPanel.isVisible()) {
+            fishingPanel.getPanel().setVisible(false);
         }
 
-        if(CookingPanel.panel != null && CookingPanel.panel.isVisible()) {
-            CookingPanel.panel.setVisible(false);
+        if(cookingPanel != null && cookingPanel.isVisible()) {
+            cookingPanel.getPanel().setVisible(false);
         }
+
         deselectButtons();
         buttonName.setSelected(true);
     }
@@ -158,13 +145,12 @@ public class GUI extends JFrame {
     /**
      * Create the frame.
      */
-    public GUI(Script script) throws IOException {
+    public GUI(OverloadAIO script) throws IOException {
         setResizable(false);
         setTitle("Overload GUI");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 1450, 700);
 
-        contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
@@ -278,41 +264,61 @@ public class GUI extends JFrame {
         fletchingButton.setBounds(94, 158, 40, 40);
         contentPane.add(fletchingButton);
 
-        woodcuttingPanel = new WoodcuttingPanel(script);
         woodcuttingButton = new JButton("");
         woodcuttingButton.addActionListener(arg0 -> {
             setButtonOption("WOODCUTTING", woodcuttingButton);
-            WoodcuttingPanel.panel.setVisible(true);
+
+            if(woodcuttingPanel != null) {
+                woodcuttingPanel.getPanel().setVisible(true);
+            } else {
+                woodcuttingPanel = new WoodcuttingPanel(script);
+                woodcuttingPanel.getPanel().setVisible(true);
+            }
         });
         loadImage("http://i.imgur.com/HsA18aP.png", woodcuttingButton);
         woodcuttingButton.setBounds(135, 281, 40, 40);
         contentPane.add(woodcuttingButton);
 
-        firemakingPanel = new FiremakingPanel(script);
         firemakingButton = new JButton("");
         firemakingButton.addActionListener(arg0 -> {
             setButtonOption("FIREMAKING", firemakingButton);
-            FiremakingPanel.panel.setVisible(true);
+
+            if(firemakingPanel != null) {
+                firemakingPanel.getPanel().setVisible(true);
+            } else {
+                firemakingPanel = new FiremakingPanel(script);
+                firemakingPanel.getPanel().setVisible(true);
+            }
         });
         loadImage("http://i.imgur.com/oIVSH1z.png", firemakingButton);
         firemakingButton.setBounds(135, 240, 40, 40);
         contentPane.add(firemakingButton);
 
-        cookingPanel = new CookingPanel();
         cookingButton = new JButton("");
         cookingButton.addActionListener(arg0 -> {
             setButtonOption("COOKING", cookingButton);
-            CookingPanel.panel.setVisible(true);
+
+            if(cookingPanel != null) {
+                cookingPanel.getPanel().setVisible(true);
+            } else {
+                cookingPanel = new CookingPanel(script);
+                cookingPanel.getPanel().setVisible(true);
+            }
         });
         loadImage("http://i.imgur.com/PnLh0np.png", cookingButton);
         cookingButton.setBounds(135, 199, 40, 40);
         contentPane.add(cookingButton);
 
-        fishingPanel = new FishingPanel();
         fishingButton = new JButton("");
         fishingButton.addActionListener(arg0 -> {
             setButtonOption("FISHING", fishingButton);
-            FishingPanel.panel.setVisible(true);
+
+            if(cookingPanel != null) {
+                fishingPanel.getPanel().setVisible(true);
+            } else {
+                fishingPanel = new FishingPanel(script);
+                fishingPanel.getPanel().setVisible(true);
+            }
         });
         loadImage("http://i.imgur.com/60dPW66.png", fishingButton);
         fishingButton.setBounds(135, 158, 40, 40);
@@ -374,9 +380,9 @@ public class GUI extends JFrame {
             Area tutorialIslandArea = new Area(3059, 3136, 3151, 3059);
 
             if(script.configs.get(406) < 20 || tutorialIslandArea.contains(script.myPosition())) {
-                OverloadAIO.tasks.addFirst(new TutorialIslandTask(script));
+                script.getTasks().addFirst(new TutorialIslandTask(script));
             }
-            OverloadAIO.guiWait = false;
+            script.setGuiWait(false);
             dispose();
         });
         startScriptButton.setBounds(12, 624, 1408, 25);
@@ -424,5 +430,9 @@ public class GUI extends JFrame {
         scriptLogoLabel.setBounds(12, 13, 1408, 117);
         loadMainImage("http://i.imgur.com/4NYnmpo.png", scriptLogoLabel);
         contentPane.add(scriptLogoLabel);
+    }
+
+    public JPanel getConentPane() {
+        return this.contentPane;
     }
 }

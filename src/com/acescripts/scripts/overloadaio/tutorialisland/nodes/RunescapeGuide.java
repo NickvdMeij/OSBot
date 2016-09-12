@@ -1,20 +1,17 @@
 package com.acescripts.scripts.overloadaio.tutorialisland.nodes;
 
+import com.acescripts.scripts.overloadaio.OverloadAIO;
 import com.acescripts.scripts.overloadaio.framework.Constants;
 import com.acescripts.scripts.overloadaio.framework.Node;
-import com.acescripts.scripts.overloadaio.tutorialisland.methods.TutorialIslandMethods;
 import org.osbot.rs07.api.ui.RS2Widget;
 import org.osbot.rs07.api.ui.Tab;
-import org.osbot.rs07.script.Script;
 
 /**
  * Created by Transporter on 06/08/2016 at 23:53.
  */
 
 public class RunescapeGuide extends Node {
-    private TutorialIslandMethods tutorialIslandMethods = new TutorialIslandMethods(script);
-
-    public RunescapeGuide(Script script) {
+    public RunescapeGuide(OverloadAIO script) {
         super(script);
     }
 
@@ -35,27 +32,27 @@ public class RunescapeGuide extends Node {
         if(widget != null && widget.isVisible()) {
             switch(widget.getMessage()) {
                 case Constants.WidgetText.START_TUTORIAL:
-                    tutorialIslandMethods.setStatus("Talking to Runescape Guide.");
-                    tutorialIslandMethods.interactWithNpc("RuneScape Guide", "Talk-to");
+                    script.setStatus("Talking to Runescape Guide.");
+                    methods.interactWithNpc("RuneScape Guide", "Talk-to");
                     break;
                 case Constants.WidgetText.PLAYER_CONTROLS:
-                    tutorialIslandMethods.setStatus("Opening Settings.");
+                    script.setStatus("Opening Settings.");
                     script.getTabs().open(Tab.SETTINGS);
                     break;
             }
         } else if(widgetTwo != null && widgetTwo.isVisible()) {
             switch(widgetTwo.getMessage()) {
                 case Constants.WidgetText.PLAYER_CONTROLS:
-                    tutorialIslandMethods.setStatus("Talking to Runescape Guide.");
-                    tutorialIslandMethods.interactWithNpc("RuneScape Guide", "Talk-to");
+                    script.setStatus("Talking to Runescape Guide.");
+                    methods.interactWithNpc("RuneScape Guide", "Talk-to");
                     break;
                 case Constants.WidgetText.OPEN_FIST_DOOR:
-                    tutorialIslandMethods.setStatus("Opening Door.");
-                    tutorialIslandMethods.interactWithObject("Door", "Open");
+                    script.setStatus("Opening Door.");
+                    methods.interactWithObject("Door", "Open");
                     break;
             }
         } else {
-            tutorialIslandMethods.clickContinue();
+            methods.clickContinue();
         }
     }
 

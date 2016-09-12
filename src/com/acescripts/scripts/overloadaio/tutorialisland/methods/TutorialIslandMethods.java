@@ -2,7 +2,6 @@ package com.acescripts.scripts.overloadaio.tutorialisland.methods;
 
 import com.acescripts.scripts.overloadaio.OverloadAIO;
 import com.acescripts.scripts.overloadaio.framework.Constants;
-import org.osbot.rs07.api.filter.Filter;
 import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.map.Position;
 import org.osbot.rs07.api.model.Entity;
@@ -13,9 +12,6 @@ import org.osbot.rs07.event.WalkingEvent;
 import org.osbot.rs07.script.Script;
 import org.osbot.rs07.utility.ConditionalSleep;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static org.osbot.rs07.script.MethodProvider.random;
 import static org.osbot.rs07.script.MethodProvider.sleep;
 
@@ -24,14 +20,10 @@ import static org.osbot.rs07.script.MethodProvider.sleep;
  */
 
 public class TutorialIslandMethods {
-    private Script script;
+    private OverloadAIO script;
 
-    public TutorialIslandMethods(Script script) {
+    public TutorialIslandMethods(OverloadAIO script) {
         this.script = script;
-    }
-
-    public void setStatus(String status) {
-        OverloadAIO.status = status;
     }
 
     public void interactWithNpc(String npcName, String interactOption) {
@@ -210,7 +202,7 @@ public class TutorialIslandMethods {
     }
 
     public void clickContinue() throws InterruptedException {
-        setStatus("Clicking Continue.");
+        script.setStatus("Clicking Continue.");
 
         RS2Widget widget = script.getWidgets().getWidgetContainingText("Click here to continue");
         RS2Widget widget2 = script.getWidgets().getWidgetContainingText(Constants.Widgets.CLICK_CONTINUE, "Click to continue");

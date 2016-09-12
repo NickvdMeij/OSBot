@@ -1,20 +1,16 @@
 package com.acescripts.scripts.overloadaio.tutorialisland.nodes;
 
+import com.acescripts.scripts.overloadaio.OverloadAIO;
 import com.acescripts.scripts.overloadaio.framework.Constants;
 import com.acescripts.scripts.overloadaio.framework.Node;
-import com.acescripts.scripts.overloadaio.tutorialisland.methods.TutorialIslandMethods;
 import org.osbot.rs07.api.ui.RS2Widget;
-import org.osbot.rs07.script.Script;
 
 /**
  * Created by Transporter on 07/08/2016 at 02:08.
  */
 
 public class BankInstructor extends Node {
-
-    private TutorialIslandMethods tutorialIslandMethods = new TutorialIslandMethods(script);
-
-    public BankInstructor(Script script) {
+    public BankInstructor(OverloadAIO script) {
         super(script);
     }
 
@@ -22,7 +18,7 @@ public class BankInstructor extends Node {
         if(script.bank.isOpen()) {
             script.bank.close();
         } else {
-            tutorialIslandMethods.interactWithObject("Poll booth", "Use");
+            methods.interactWithObject("Poll booth", "Use");
         }
     }
 
@@ -32,7 +28,7 @@ public class BankInstructor extends Node {
         if(widget != null && widget.isVisible()) {
             script.getWidgets().closeOpenInterface();
         } else {
-            tutorialIslandMethods.interactWithObject("Door", Constants.Objects.BANK_INSTRUCTOR_DOOR_POSITION, "Open");
+            methods.interactWithObject("Door", Constants.Objects.BANK_INSTRUCTOR_DOOR_POSITION, "Open");
         }
     }
 
@@ -48,22 +44,22 @@ public class BankInstructor extends Node {
         if(widget != null && widget.isVisible()) {
             switch (widget.getMessage()) {
                 case Constants.WidgetText.OPEN_BANK:
-                    tutorialIslandMethods.setStatus("Opening Bank.");
-                    tutorialIslandMethods.interactWithObject("Bank booth", "Use");
+                    script.setStatus("Opening Bank.");
+                    methods.interactWithObject("Bank booth", "Use");
                     break;
                 case Constants.WidgetText.OPEN_POLL_BOOTH:
-                    tutorialIslandMethods.setStatus("Opening Poll Box.");
+                    script.setStatus("Opening Poll Box.");
                     openPollBooth();
                     break;
                 case Constants.WidgetText.OPEN_BANK_INSTRUCTOR_EXIT:
-                    tutorialIslandMethods.setStatus("Opening Door.");
+                    script.setStatus("Opening Door.");
                     openNextDoor();
                     break;
             }
         } else if(script.getDialogues().isPendingOption()) {
             script.getDialogues().selectOption("Yes.");
         } else {
-            tutorialIslandMethods.clickContinue();
+            methods.clickContinue();
         }
     }
 

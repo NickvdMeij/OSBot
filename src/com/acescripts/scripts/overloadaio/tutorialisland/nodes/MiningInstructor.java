@@ -1,17 +1,13 @@
 package com.acescripts.scripts.overloadaio.tutorialisland.nodes;
 
+import com.acescripts.scripts.overloadaio.OverloadAIO;
 import com.acescripts.scripts.overloadaio.framework.Constants;
 import com.acescripts.scripts.overloadaio.framework.Node;
-import com.acescripts.scripts.overloadaio.tutorialisland.methods.TutorialIslandMethods;
-import org.osbot.P;
-import org.osbot.rs07.api.filter.Filter;
 import org.osbot.rs07.api.map.Position;
 import org.osbot.rs07.api.model.Entity;
 import org.osbot.rs07.api.model.NPC;
-import org.osbot.rs07.api.model.RS2Object;
 import org.osbot.rs07.api.ui.RS2Widget;
 import org.osbot.rs07.api.ui.Tab;
-import org.osbot.rs07.script.Script;
 import org.osbot.rs07.utility.ConditionalSleep;
 
 import java.util.Random;
@@ -21,10 +17,7 @@ import java.util.Random;
  */
 
 public class MiningInstructor extends Node {
-
-    private TutorialIslandMethods tutorialIslandMethods = new TutorialIslandMethods(script);
-
-    public MiningInstructor(Script script) {
+    public MiningInstructor(OverloadAIO script) {
         super(script);
     }
 
@@ -32,7 +25,7 @@ public class MiningInstructor extends Node {
         NPC npc = script.getNpcs().closest("Mining Instructor");
 
         if(npc != null) {
-            tutorialIslandMethods.interactWithNpc("Mining Instructor", "Talk-to");
+            methods.interactWithNpc("Mining Instructor", "Talk-to");
         } else {
             script.walking.walk(new Position(3080, 9505, 0));
         }
@@ -68,9 +61,9 @@ public class MiningInstructor extends Node {
             int n = rand.nextInt(2) + 1;
 
             if(n == 1) {
-                tutorialIslandMethods.useItemOnObject("Furnace", "Tin ore");
+                methods.useItemOnObject("Furnace", "Tin ore");
             } else if(n == 2) {
-                tutorialIslandMethods.useItemOnObject("Furnace", "Copper ore");
+                methods.useItemOnObject("Furnace", "Copper ore");
             }
         } else {
             script.getTabs().open(Tab.INVENTORY);
@@ -84,7 +77,7 @@ public class MiningInstructor extends Node {
             script.widgets.get(312, 2).interact("Smith 1");
         } else {
             if(!script.myPlayer().isAnimating()) {
-                tutorialIslandMethods.useItemOnObject("Anvil", "Bronze bar");
+                methods.useItemOnObject("Anvil", "Bronze bar");
             }
         }
     }
@@ -110,40 +103,40 @@ public class MiningInstructor extends Node {
                 case Constants.WidgetText.TALK_TO_MINING_INSTRUCTOR_START:
                 case Constants.WidgetText.TALK_TO_MINING_INSTRUCTOR_SMELTING:
                 case Constants.WidgetText.TALK_TO_MINING_INSTRUCTOR_SMITHING:
-                    tutorialIslandMethods.setStatus("Talking to Mining Instructor.");
+                    script.setStatus("Talking to Mining Instructor.");
                     talkToMiningNpc();
                     break;
                 case Constants.WidgetText.PROSPECT_TIN_ORE:
-                    tutorialIslandMethods.setStatus("Prospecting Tin Ore.");
+                    script.setStatus("Prospecting Tin Ore.");
                     interactWithRocks(Constants.Objects.TIN_ROCK_COLOUR, "Prospect");
                     break;
                 case Constants.WidgetText.PROSPECT_COPPER_ORE:
-                    tutorialIslandMethods.setStatus("Prospecting Copper Ore.");
+                    script.setStatus("Prospecting Copper Ore.");
                     interactWithRocks(Constants.Objects.COPPER_ROCK_COLOUR, "Prospect");
                     break;
                 case Constants.WidgetText.SMELTING:
-                    tutorialIslandMethods.setStatus("Making Bronze Bar.");
+                    script.setStatus("Making Bronze Bar.");
                     makeBronzeBar();
                     break;
                 case Constants.WidgetText.SMITHING_A_DAGGER:
-                    tutorialIslandMethods.setStatus("Smithing Bronze Dagger.");
+                    script.setStatus("Smithing Bronze Dagger.");
                     smithBronzeDagger();
                     break;
                 case Constants.WidgetText.OPEN_MINING_INSTRUCTOR_EXIT:
-                    tutorialIslandMethods.setStatus("Opening Gate.");
-                    tutorialIslandMethods.interactWithObject("Gate", "Open");
+                    script.setStatus("Opening Gate.");
+                    methods.interactWithObject("Gate", "Open");
                     break;
                 case Constants.WidgetText.MINE_TIN_ORE:
-                    tutorialIslandMethods.setStatus("Mining Tin.");
+                    script.setStatus("Mining Tin.");
                     interactWithRocks(Constants.Objects.TIN_ROCK_COLOUR, "Mine");
                     break;
                 case Constants.WidgetText.MINE_COPPER_ORE:
-                    tutorialIslandMethods.setStatus("Mining Copper.");
+                    script.setStatus("Mining Copper.");
                     interactWithRocks(Constants.Objects.COPPER_ROCK_COLOUR, "Mine");
                     break;
             }
         } else {
-            tutorialIslandMethods.clickContinue();
+            methods.clickContinue();
         }
     }
 

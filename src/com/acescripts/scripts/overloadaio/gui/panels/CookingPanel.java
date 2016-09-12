@@ -1,20 +1,12 @@
 package com.acescripts.scripts.overloadaio.gui.panels;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
-import com.acescripts.scripts.overloadaio.gui.GUI;
+import com.acescripts.scripts.overloadaio.OverloadAIO;
 import com.acescripts.scripts.overloadaio.skills.cooking.CookingLocations;
 import com.acescripts.scripts.overloadaio.skills.cooking.Food;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class CookingPanel extends JPanel {
     /**
@@ -22,7 +14,7 @@ public class CookingPanel extends JPanel {
      */
 
     private static final long serialVersionUID = -4606875787974072904L;
-    public static JPanel panel;
+    private  JPanel panel;
     private JButton addTaskButton;
 
     /**
@@ -49,11 +41,11 @@ public class CookingPanel extends JPanel {
     /**
      * Create the panel.
      */
-    public CookingPanel() {
+    public CookingPanel(OverloadAIO script) {
         panel = new JPanel();
         panel.setVisible(false);
         panel.setBounds(187, 195, 869, 418);
-        GUI.contentPane.add(panel);
+        script.getGui().contentPane.add(panel);
         panel.setLayout(null);
 
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -160,7 +152,7 @@ public class CookingPanel extends JPanel {
 
         addTaskButton = new JButton("ADD >>");
         addTaskButton.addActionListener(e -> {
-            int taskNumber = GUI.table.getRowCount() + 1;
+            int taskNumber = script.getGui().table.getRowCount() + 1;
             String taskGoal = null;
             String taskType = null;
 
@@ -174,11 +166,15 @@ public class CookingPanel extends JPanel {
                 taskType = "Timed";
                 taskGoal = desiredGoalTextField.getText() + " Minutes";
             }
-            GUI.model.addRow(new Object[]{taskNumber, taskType, taskGoal});
+            script.getGui().model.addRow(new Object[]{taskNumber, taskType, taskGoal});
             //ADD COOKING TASK TO TASKS QUEUE
         });
         addTaskButton.setBounds(0, 392, 869, 25);
         addTaskButton.setEnabled(false);
         panel.add(addTaskButton);
+    }
+
+    public JPanel getPanel() {
+        return panel;
     }
 }

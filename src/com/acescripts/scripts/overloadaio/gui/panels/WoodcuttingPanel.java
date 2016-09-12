@@ -2,20 +2,10 @@ package com.acescripts.scripts.overloadaio.gui.panels;
 
 import com.acescripts.scripts.overloadaio.OverloadAIO;
 import com.acescripts.scripts.overloadaio.framework.Tree;
-import com.acescripts.scripts.overloadaio.gui.GUI;
 import com.acescripts.scripts.overloadaio.skills.woodcutting.WoodcuttingLocations;
 import com.acescripts.scripts.overloadaio.skills.woodcutting.WoodcuttingTask;
-import org.osbot.rs07.script.Script;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -24,9 +14,9 @@ public class WoodcuttingPanel extends JPanel {
      * WOODCUTTING MAIN OBJECTS
      */
     private static final long serialVersionUID = -4606875787974072904L;
-    public static JPanel panel;
     private JButton addTaskButton;
     private boolean bankingEnabled;
+    private JPanel panel;
 
     /**
      * MAIN OPTIONS
@@ -53,11 +43,11 @@ public class WoodcuttingPanel extends JPanel {
     /**
      * Create the panel.
      */
-    public WoodcuttingPanel(Script script) {
+    public WoodcuttingPanel(OverloadAIO script) {
         panel = new JPanel();
         panel.setVisible(false);
         panel.setBounds(187, 195, 869, 418);
-        GUI.contentPane.add(panel);
+        script.getGui().getConentPane().add(panel);
         panel.setLayout(null);
 
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -196,7 +186,7 @@ public class WoodcuttingPanel extends JPanel {
 
         addTaskButton = new JButton("ADD >>");
         addTaskButton.addActionListener(e -> {
-            int taskNumber = GUI.table.getRowCount() + 1;
+            int taskNumber = script.getGui().table.getRowCount() + 1;
             String taskGoal = null;
             String taskType = null;
 
@@ -210,12 +200,15 @@ public class WoodcuttingPanel extends JPanel {
                 taskType = "Timed";
                 taskGoal = desiredGoalTextField.getText() + " Minutes";
             }
-            GUI.model.addRow(new Object[]{taskNumber, taskType, taskGoal});
-            OverloadAIO.tasks.add(new WoodcuttingTask(script,  Tree.valueOf(treeTypeComboBox.getSelectedItem().toString()).getTreeName(), Integer.parseInt(desiredGoalTextField.getText()), WoodcuttingLocations.valueOf(woodcuttingLocationComboBox.getSelectedItem().toString()).getArea(), bankingEnabled));
-
+            script.getGui().model.addRow(new Object[]{taskNumber, taskType, taskGoal});
+            script.getTasks().add(new WoodcuttingTask(script,  Tree.valueOf(treeTypeComboBox.getSelectedItem().toString()).getTreeName(), Integer.parseInt(desiredGoalTextField.getText()), WoodcuttingLocations.valueOf(woodcuttingLocationComboBox.getSelectedItem().toString()).getArea(), bankingEnabled));
         });
         addTaskButton.setBounds(0, 392, 869, 25);
         addTaskButton.setEnabled(false);
         panel.add(addTaskButton);
+    }
+
+    public JPanel getPanel() {
+        return panel;
     }
 }

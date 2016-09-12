@@ -12,17 +12,15 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class GUIPaint extends JFrame {
-    public static DefaultTableModel model;
-    public static JLabel lblTimeRunning;
-    public static JLabel lblNewLabel;
+    private JLabel lblTimeRunning;
+    private DefaultTableModel model;
+    private JLabel lblStatus;
 
     private void loadMainImage(String fullUrlPath, JLabel buttonName) {
         try {
@@ -50,6 +48,18 @@ public class GUIPaint extends JFrame {
         }
     }
 
+    public void setTimeRunning(String timeRan) {
+        lblTimeRunning.setText(timeRan);
+    }
+
+    public void setStatus(String status) {
+        lblStatus.setText(status);
+    }
+
+    public DefaultTableModel getModel() {
+        return model;
+    }
+
     /**
      * Create the frame.
      */
@@ -73,10 +83,10 @@ public class GUIPaint extends JFrame {
         separator.setBounds(12, 143, 808, 2);
         contentPane.add(separator);
 
-        lblNewLabel = new JLabel("Status: Loading GUI2...");
-        lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
-        lblNewLabel.setBounds(12, 158, 390, 25);
-        contentPane.add(lblNewLabel);
+        lblStatus = new JLabel("Status: Loading GUI...");
+        lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 17));
+        lblStatus.setBounds(12, 158, 390, 25);
+        contentPane.add(lblStatus);
 
         lblTimeRunning = new JLabel("Time Running: 00:00:00:00");
         lblTimeRunning.setHorizontalAlignment(SwingConstants.RIGHT);

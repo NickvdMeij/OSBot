@@ -1,16 +1,18 @@
 package com.acescripts.scripts.overloadaio.skills.woodcutting;
 
 import com.acescripts.scripts.overloadaio.OverloadAIO;
-import com.acescripts.scripts.overloadaio.framework.Task;
-import com.acescripts.scripts.overloadaio.framework.Bank;
+import com.acescripts.scripts.overloadaio.framework.*;
 import org.osbot.rs07.api.filter.Filter;
 import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.map.Position;
 import org.osbot.rs07.api.model.Entity;
+import org.osbot.rs07.api.model.Item;
 import org.osbot.rs07.api.model.RS2Object;
 import org.osbot.rs07.api.ui.Skill;
-import org.osbot.rs07.script.Script;
 import org.osbot.rs07.utility.ConditionalSleep;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.osbot.rs07.script.MethodProvider.random;
 import static org.osbot.rs07.script.MethodProvider.sleep;
@@ -20,13 +22,13 @@ import static org.osbot.rs07.script.MethodProvider.sleep;
  */
 
 public class WoodcuttingTask implements Task {
-    private Script script;
+    private OverloadAIO script;
     private String toChop;
     private int stopLevel;
     private Area choppingArea;
     private boolean shouldBank = false;
 
-    public WoodcuttingTask(Script script, String toChop, int stopLevel, Area choppingArea, boolean shouldBank) {
+    public WoodcuttingTask(OverloadAIO script, String toChop, int stopLevel, Area choppingArea, boolean shouldBank) {
         this.script = script;
         this.toChop = toChop;
         this.stopLevel = stopLevel;
@@ -41,7 +43,7 @@ public class WoodcuttingTask implements Task {
     private State getState() {
         Entity tree = script.objects.closest(toChop);
 
-        if(script.inventory.isFull() && shouldBank || !script.inventory.contains(1351)) {
+        if(script.inventory.isFull() && shouldBank || (!script.getEquipment().isWieldingWeaponThatContains("axe") && !script.getInventory().contains(getAxeNames()))) {
             return State.BANK;
         }
 
@@ -59,23 +61,62 @@ public class WoodcuttingTask implements Task {
         return State.WAIT;
     }
 
+    private String[] getAxeNames() {
+        Equipment[] states = Equipment.values();
+        String[] names = new String[states.length];
+
+        for (int i = 0; i < states.length; i++) {
+            names[i] = states[i].getAxe();
+        }
+
+        return names;
+    }
+
+    private Axe[] getCurrentAxe() {
+        if (script.getSkills().getStatic(Skill.WOODCUTTING) == 1) {
+            return new Axe[] {
+                    Axe.IRON, Axe.BRONZE };
+        } else {
+            List<Axe> axes = new LinkedList<>();
+            for (int i = Axe.values().length - 1; i >= 0; i--) {
+                if(script.getBank().contains(Axe.values()[i].getName())) {
+                    axes.add(Axe.values()[i]);
+                }
+            }
+            return axes.toArray(new Axe[axes.size()]);
+        }
+    }
+
+    private void withdrawBestAxe() throws InterruptedException {
+        Axe[] currentAxe = getCurrentAxe();
+
+        if(currentAxe != null && currentAxe.length > 0) {
+            if(script.getBank().contains(currentAxe[0].getName())) {
+                script.getBank().withdraw(currentAxe[0].getName(), 1);
+                new ConditionalSleep(2000) {
+                    @Override
+                    public boolean condition() {
+                        return script.getInventory().contains(currentAxe[0].getName());
+                    }
+                }.sleep();
+            }
+        }
+    }
+
     public void proceed() throws InterruptedException {
         switch (getState()) {
             case BANK:
-                OverloadAIO.status = "Banking";
+                script.setStatus("Banking");
 
                 Area currentBank = Bank.closestTo(script.myPlayer());
 
                 if(currentBank.contains(script.myPlayer())) {
                     if(script.getBank().isOpen()) {
-                        if(script.inventory.contains(1351)) {
-                            script.getBank().depositAllExcept(1351);
+                        if(script.getEquipment().isWieldingWeaponThatContains(getAxeNames()) || script.getInventory().contains(getAxeNames())) {
+                            script.getBank().depositAllExcept(getAxeNames());
                             script.getBank().close();
                         } else {
-                            if(!script.getInventory().isEmptyExcept(1351)) {
-                                script.getBank().depositAll();
-                            }
-                            script.getBank().withdraw(1351, 1);
+                            withdrawBestAxe();
                         }
                     } else {
                         script.getBank().open();
@@ -86,14 +127,14 @@ public class WoodcuttingTask implements Task {
                 }
                 break;
             case CHOP:
+                script.setStatus("Chop");
+
                 RS2Object tree = script.getObjects().closest(new Filter<RS2Object>(){
                     @Override
                     public boolean match(RS2Object object) {
                         return object != null && object.getName().equals(toChop) && choppingArea.contains(object.getPosition());
                     }
                 });
-
-                OverloadAIO.status = "Chop";
 
                 if (tree != null && tree.isVisible()) {
                     tree.interact("Chop down");
@@ -116,15 +157,20 @@ public class WoodcuttingTask implements Task {
                 }
                 break;
             case DROP:
-                OverloadAIO.status = "Drop";
-                script.inventory.dropAll("Oak logs");
+                script.setStatus("Drop");
+
+                if(toChop.equals("Tree")) {
+                    script.inventory.dropAll(Tree.NORMAL.getLogName());
+                } else {
+                    script.inventory.dropAll(Tree.valueOf(toChop).getLogName());
+                }
                 break;
             case WALK_TO_TREES:
-                OverloadAIO.status = "Walking To Trees";
+                script.setStatus("Walking to Trees");
                 script.walking.webWalk(choppingArea);
                 break;
             case WAIT:
-                OverloadAIO.status = "Waiting...";
+                script.setStatus("Waiting...");
                 break;
         }
     }

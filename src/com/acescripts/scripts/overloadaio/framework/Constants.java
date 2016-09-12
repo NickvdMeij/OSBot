@@ -15,7 +15,7 @@ public class Constants {
         public static final Position MASTER_CHEF_DOOR_POSITION = new Position(3072, 3090, 0);
         public static final Position QUEST_GUIDE_DOOR_POSITION = new Position(3086, 3126, 0);
         public static final Position COMBAT_INSTRUCTOR_GATE_POSITION = new Position(3111, 9518, 0);
-        public static final Position BANK_INSTRUCTOR_DOOR_POSITION = new Position(0, 0, 0);
+        public static final Position BANK_INSTRUCTOR_DOOR_POSITION = new Position(3125, 3124, 0);
         public static final Position FINANCIAL_ADVISOR_DOOR_POSITION = new Position(3130, 3124, 0);
         public static final Position BROTHER_BRACE_DOOR_POSITION = new Position(3122, 3102, 0);
 

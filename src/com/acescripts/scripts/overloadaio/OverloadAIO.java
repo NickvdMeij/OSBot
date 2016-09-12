@@ -4,16 +4,18 @@ import com.acescripts.scripts.overloadaio.framework.Task;
 import com.acescripts.scripts.overloadaio.gui.GUI;
 import com.acescripts.scripts.overloadaio.paint.GUIPaint;
 import com.acescripts.scripts.overloadaio.paint.PaintHandler;
-import com.acescripts.scripts.overloadaio.paint.SkillTracking;
-import org.osbot.rs07.api.Skills;
+import com.acescripts.scripts.overloadaio.tutorialisland.methods.TutorialIslandMethods;
+import org.osbot.rs07.api.ui.Skill;
 import org.osbot.rs07.api.util.ExperienceTracker;
 import org.osbot.rs07.script.Script;
 import org.osbot.rs07.script.ScriptManifest;
 
 import java.awt.*;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,31 +28,35 @@ public class OverloadAIO extends Script {
      * TASK DATA
      */
 
-    public static Deque<Task> tasks = new LinkedList<>();
+    private Deque<Task> tasks = new LinkedList<>();
     private Task current = null;
     private GUI gui = new GUI(this);
-    private GUIPaint guiPaint = new GUIPaint(this);
+    private TutorialIslandMethods tutorialIslandMethods;
+    private String status = "Loading";
 
     /**
-     * PAINT DATA
+     * GUI PAINT DATA
      */
 
-    public static boolean guiWait = true;
-    private static Color DARKRED150 = new Color(135,206,250), BLACK100 = new Color(176,224,230);
-    private final LinkedList<MousePathPoint> mousePath = new LinkedList<>();
-    public static String status = "Loading";
-
-    public static ExperienceTracker xpTrack = new ExperienceTracker();
-    public static Skills skills;
+    private GUIPaint guiPaint;
+    private boolean guiWait = true;
+    private ExperienceTracker xpTrack;
     private PaintHandler paintThread;
     private long timeBegan;
-    private long timeRan;
+
+    /**
+     * MOUSE PAINT DATA
+     */
+
+    private Color DARKRED150 = new Color(135,206,250), BLACK100 = new Color(176,224,230);
+    private final LinkedList<MousePathPoint> mousePath = new LinkedList<>();
 
     public OverloadAIO() throws IOException {}
 
     @Override
     public void onStart() throws InterruptedException {
-        guiWait = true;//TUT ISLAND = 406
+        tutorialIslandMethods = new TutorialIslandMethods(this);
+        guiWait = true;
 
         while(guiWait) {
             if(!gui.isShowing()) {
@@ -60,15 +66,9 @@ public class OverloadAIO extends Script {
         }
 
         if(!guiWait) {
+            guiPaint = new GUIPaint(this);
             xpTrack = getExperienceTracker();
             xpTrack.startAll();
-            skills = getSkills();
-
-            for(SkillTracking skill: SkillTracking.values()) {
-                GUIPaint.model.addRow(new Object[] {
-                        skill.getSkillName(), skill.getCurrentLevel(), skill.getLevelsGained(), skill.getXpGained(), skill.getXpHour(), skill.getTimeUntilLevel()
-                });
-            }
 
             timeBegan = System.currentTimeMillis();
 
@@ -76,8 +76,19 @@ public class OverloadAIO extends Script {
                 guiPaint.setVisible(true);
             }
 
+            for(Skill skill : Skill.values()) {
+                getGuiPaint().getModel().addRow(new Object[] {
+                        skill.name(),
+                        getXpTrack().getSkills().getStatic(skill),
+                        getXpTrack().getGainedLevels(skill),
+                        formatInteger(getXpTrack().getGainedXP(skill)),
+                        formatInteger(getXpTrack().getGainedXPPerHour(skill)),
+                        formatTime(getXpTrack().getTimeToLevel(skill))
+                });
+            }
+
             paintThread = new PaintHandler(this);
-            PaintHandler.running = true;
+            paintThread.setRunning(true);
             paintThread.start();
         }
     }
@@ -123,9 +134,9 @@ public class OverloadAIO extends Script {
     public void onPaint(Graphics2D g) {
         paintMouse(g);
         paintMouseSpline(g);
-        timeRan = System.currentTimeMillis() - this.timeBegan;
-        GUIPaint.lblTimeRunning.setText("Time Running: " + formatTime(timeRan));
-        GUIPaint.lblNewLabel.setText("Status: " + status);
+        long timeRan = System.currentTimeMillis() - this.timeBegan;
+        guiPaint.setTimeRunning("Time Running: " + formatTime(timeRan));
+        guiPaint.setStatus("Status: " + status);
     }
 
     private void paintMouse(Graphics2D g) {
@@ -201,9 +212,39 @@ public class OverloadAIO extends Script {
         }
     }
 
+    public Deque<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setStatus(String newStatus) {
+        this.status = newStatus;
+    }
+
+    public void setGuiWait(boolean waitStatus) {
+        this.guiWait = waitStatus;
+    }
+
+    public TutorialIslandMethods getMethods() {
+        return tutorialIslandMethods;
+    }
+
+    public GUI getGui() { return gui; }
+
+    public GUIPaint getGuiPaint() {
+        return guiPaint;
+    }
+
+    public ExperienceTracker getXpTrack() {
+        return xpTrack;
+    }
+
+    private String formatInteger(int integer) {
+        return NumberFormat.getNumberInstance(Locale.US).format(integer);
+    }
+
     @Override
     public void onExit() {
         guiPaint.dispose();
-        PaintHandler.running = false;
+        paintThread.setRunning(false);
     }
 }

@@ -1,13 +1,12 @@
 package com.acescripts.scripts.overloadaio.tutorialisland.nodes;
 
+import com.acescripts.scripts.overloadaio.OverloadAIO;
 import com.acescripts.scripts.overloadaio.framework.Constants;
 import com.acescripts.scripts.overloadaio.framework.Node;
-import com.acescripts.scripts.overloadaio.tutorialisland.methods.TutorialIslandMethods;
 import org.osbot.rs07.api.map.Position;
 import org.osbot.rs07.api.model.Entity;
 import org.osbot.rs07.api.ui.RS2Widget;
 import org.osbot.rs07.api.ui.Tab;
-import org.osbot.rs07.script.Script;
 
 import java.util.Random;
 
@@ -16,10 +15,7 @@ import java.util.Random;
  */
 
 public class QuestGuide extends Node {
-
-    private TutorialIslandMethods tutorialIslandMethods = new TutorialIslandMethods(script);
-
-    public QuestGuide(Script script) {
+    public QuestGuide(OverloadAIO script) {
         super(script);
     }
 
@@ -42,7 +38,7 @@ public class QuestGuide extends Node {
         );
 
         if(door != null && door.isVisible()) {
-            tutorialIslandMethods.interactWithObject("Door", Constants.Objects.MASTER_CHEF_DOOR_POSITION, "Open");
+            methods.interactWithObject("Door", Constants.Objects.QUEST_GUIDE_DOOR_POSITION, "Open");
         } else {
             script.walking.walk(new Position(3086, 3126, 0));
         }
@@ -70,44 +66,44 @@ public class QuestGuide extends Node {
         if(widget != null && widget.isVisible()) {
             switch(widget.getMessage()) {
                 case Constants.WidgetText.PERFORM_EMOTE:
-                    tutorialIslandMethods.setStatus("Opening Emotes.");
+                    script.setStatus("Opening Emotes.");
                     script.getTabs().open(Tab.EMOTES);
                     break;
                 case Constants.WidgetText.TALK_TO_QUEST_GUIDE_JOURNAL:
                 case Constants.WidgetText.TALK_TO_QUEST_GUIDE_NORMAL:
-                    tutorialIslandMethods.setStatus("Talking to Quest Guide.");
-                    tutorialIslandMethods.interactWithNpc("Quest Guide", "Talk-to");
+                    script.setStatus("Talking to Quest Guide.");
+                    methods.interactWithNpc("Quest Guide", "Talk-to");
                     break;
                 case Constants.WidgetText.OPENING_SETTINGS:
-                    tutorialIslandMethods.setStatus("Opening Settings.");
+                    script.setStatus("Opening Settings.");
                     script.getTabs().open(Tab.SETTINGS);
                     break;
                 case Constants.WidgetText.TURN_ON_RUN:
-                    tutorialIslandMethods.setStatus("Turning on Run.");
+                    script.setStatus("Turning on Run.");
                     script.widgets.get(261, 65).interact();
                     break;
                 case Constants.WidgetText.OPENING_QUESTS:
-                    tutorialIslandMethods.setStatus("Opening Quests.");
+                    script.setStatus("Opening Quests.");
                     script.getTabs().open(Tab.QUEST);
                     break;
                 case Constants.WidgetText.CLIMB_DOWN_LADDER:
-                    tutorialIslandMethods.setStatus("Climbing Down Ladder.");
-                    tutorialIslandMethods.interactWithObject("Ladder", "Climb-down");
+                    script.setStatus("Climbing Down Ladder.");
+                    methods.interactWithObject("Ladder", "Climb-down");
                     break;
             }
         } else if(widgetTwo != null && widgetTwo.isVisible()) {
             switch(widgetTwo.getMessage()) {
                 case Constants.WidgetText.PERFORM_EMOTE:
-                    tutorialIslandMethods.setStatus("Performing Random Emote.");
+                    script.setStatus("Performing Random Emote.");
                     performRandomEmote();
                     break;
                 case Constants.WidgetText.RUN_TO_GUIDE:
-                    tutorialIslandMethods.setStatus("Running To Next Guide.");
+                    script.setStatus("Running To Next Guide.");
                     runToNextGuide();
                     break;
             }
         } else {
-            tutorialIslandMethods.clickContinue();
+            methods.clickContinue();
         }
     }
 

@@ -1,16 +1,19 @@
 package com.acescripts.scripts.overloadaio.framework;
 
-import org.osbot.rs07.script.Script;
+import com.acescripts.scripts.overloadaio.OverloadAIO;
+import com.acescripts.scripts.overloadaio.tutorialisland.methods.TutorialIslandMethods;
 
 /**
  * Created by Transporter on 06/08/2016 at 23:49.
  */
 
 public abstract class Node {
-    public Script script;
+    protected OverloadAIO script;
+    protected TutorialIslandMethods methods;
 
-    public Node(Script script) {
+    public Node(OverloadAIO script) {
         this.script = script;
+        this.methods = script.getMethods();
     }
 
     public abstract void execute() throws InterruptedException;

@@ -1,10 +1,10 @@
 package com.acescripts.scripts.overloadaio.tutorialisland;
 
+import com.acescripts.scripts.overloadaio.OverloadAIO;
 import com.acescripts.scripts.overloadaio.framework.Node;
 import com.acescripts.scripts.overloadaio.framework.Task;
 import com.acescripts.scripts.overloadaio.tutorialisland.nodes.*;
 import org.osbot.rs07.api.map.Area;
-import org.osbot.rs07.script.Script;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,10 +15,10 @@ import java.util.List;
  */
 
 public class TutorialIslandTask implements Task {
-    private Script script;
+    private OverloadAIO script;
     public List<Node> nodes = new ArrayList<>();
 
-    public TutorialIslandTask(Script script) {
+    public TutorialIslandTask(OverloadAIO script) {
         this.script = script;
     }
 

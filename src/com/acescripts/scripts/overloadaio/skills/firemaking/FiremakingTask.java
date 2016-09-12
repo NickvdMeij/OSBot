@@ -5,8 +5,8 @@ package com.acescripts.scripts.overloadaio.skills.firemaking;
  */
 
 import com.acescripts.scripts.overloadaio.OverloadAIO;
-import com.acescripts.scripts.overloadaio.framework.Task;
 import com.acescripts.scripts.overloadaio.framework.Bank;
+import com.acescripts.scripts.overloadaio.framework.Task;
 import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.map.Position;
 import org.osbot.rs07.api.model.RS2Object;
@@ -28,7 +28,7 @@ import static org.osbot.rs07.script.MethodProvider.sleep;
  */
 
 public class FiremakingTask implements Task {
-    private Script script;
+    private OverloadAIO script;
     private String logType;
     private int stopLevel;
     private Area firemakingArea;
@@ -37,7 +37,7 @@ public class FiremakingTask implements Task {
 
     private Position START_TILE_ONE = new Position(3105, 3250, 0);
 
-    public FiremakingTask(Script script, String logType, int stopLevel, Area firemakingArea, ArrayList<FirePath> paths) {
+    public FiremakingTask(OverloadAIO script, String logType, int stopLevel, Area firemakingArea, ArrayList<FirePath> paths) {
         this.script = script;
         this.logType = logType;
         this.stopLevel = stopLevel;
@@ -115,7 +115,7 @@ public class FiremakingTask implements Task {
         return currentBest;
     }
 
-    public boolean canLight(Position p) {
+    private boolean canLight(Position p) {
         for (RS2Object current : script.objects.get(p.getX(), p.getY())) {
             if (current != null && current.getPosition().equals(p) && !current.getName().equals("null")) {
                 return false;
@@ -124,7 +124,7 @@ public class FiremakingTask implements Task {
         return true;
     }
 
-    public static boolean walkExact(Script script, Position position) {
+    private boolean walkExact(Script script, Position position) {
         WalkingEvent event = new WalkingEvent(position);
         event.setMinDistanceThreshold(0);
         return script.execute(event).hasFinished();
@@ -133,7 +133,7 @@ public class FiremakingTask implements Task {
     public void proceed() throws InterruptedException {
         switch (getState()) {
             case BANK:
-                OverloadAIO.status = "Banking";
+                script.setStatus("Banking");
 
                 Area currentBank = Bank.closestTo(script.myPlayer());
 
@@ -158,7 +158,7 @@ public class FiremakingTask implements Task {
                 }
                 break;
             case FIRE_MAKE:
-                OverloadAIO.status = "Making Fire";
+                script.setStatus("Making Fire");
 
                 if (!canLight(script.myPosition())) {
                     if(script.getInventory().isItemSelected()) {
@@ -175,7 +175,7 @@ public class FiremakingTask implements Task {
                 }
                 break;
             case WALK_TO_FM_LOCATION:
-                OverloadAIO.status = "Walking To Fire";
+                script.setStatus("Walking to Fire");
 
                 if(script.myPosition().distance(START_TILE_ONE) > 20) {
                     WebWalkEvent event = new WebWalkEvent(START_TILE_ONE);
@@ -191,7 +191,7 @@ public class FiremakingTask implements Task {
                 }
                 break;
             case WAIT:
-                OverloadAIO.status = "Waiting...";
+                script.setStatus("Waiting...");
                 break;
         }
     }

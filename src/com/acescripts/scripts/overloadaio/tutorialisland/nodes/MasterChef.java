@@ -1,24 +1,17 @@
 package com.acescripts.scripts.overloadaio.tutorialisland.nodes;
 
+import com.acescripts.scripts.overloadaio.OverloadAIO;
 import com.acescripts.scripts.overloadaio.framework.Constants;
 import com.acescripts.scripts.overloadaio.framework.Node;
-import com.acescripts.scripts.overloadaio.tutorialisland.methods.TutorialIslandMethods;
-import org.osbot.rs07.api.map.Position;
-import org.osbot.rs07.api.model.Entity;
 import org.osbot.rs07.api.ui.RS2Widget;
 import org.osbot.rs07.api.ui.Tab;
-import org.osbot.rs07.script.Script;
-import org.osbot.rs07.utility.ConditionalSleep;
 
 /**
  * Created by Transporter on 07/08/2016 at 01:05.
  */
 
 public class MasterChef extends Node {
-
-    private TutorialIslandMethods tutorialIslandMethods = new TutorialIslandMethods(script);
-
-    public MasterChef(Script script) {
+    public MasterChef(OverloadAIO script) {
         super(script);
     }
 
@@ -41,35 +34,35 @@ public class MasterChef extends Node {
         if(widget != null && widget.isVisible()) {
             switch(widget.getMessage()) {
                 case Constants.WidgetText.MAKING_DOUGH:
-                    tutorialIslandMethods.setStatus("Making Dough.");
-                    tutorialIslandMethods.useInventoryItems("Bucket of water", "Pot of flour");
+                    script.setStatus("Making Dough.");
+                    methods.useInventoryItems("Bucket of water", "Pot of flour");
                     break;
                 case Constants.WidgetText.COOKING_DOUGH:
-                    tutorialIslandMethods.setStatus("Cooking Dough.");
-                    tutorialIslandMethods.useItemOnObject("Range", "Bread dough");
+                    script.setStatus("Cooking Dough.");
+                    methods.useItemOnObject("Range", "Bread dough");
                     break;
                 case Constants.WidgetText.OPEN_MASTER_CHEF_ENTRANCE:
-                    tutorialIslandMethods.setStatus("Opening Door.");
-                    tutorialIslandMethods.interactWithObject("Door", "Open");
+                    script.setStatus("Opening Door.");
+                    methods.interactWithObject("Door", "Open");
                     break;
                 case Constants.WidgetText.TALK_TO_MASTER_CHEF:
-                    tutorialIslandMethods.setStatus("Talking to Master Chef.");
-                    tutorialIslandMethods.interactWithNpc("Master Chef", "Talk-to");
+                    script.setStatus("Talking to Master Chef.");
+                    methods.interactWithNpc("Master Chef", "Talk-to");
                     break;
             }
         } else if(widgetTwo != null && widgetTwo.isVisible()) {
             switch(widgetTwo.getMessage()) {
                 case Constants.WidgetText.OPENING_MUSIC:
-                    tutorialIslandMethods.setStatus("Opening Music.");
+                    script.setStatus("Opening Music.");
                     script.getTabs().open(Tab.MUSIC);
                     break;
                 case Constants.WidgetText.OPEN_MASTER_CHEF_EXIT:
-                    tutorialIslandMethods.setStatus("Opening Door.");
-                    tutorialIslandMethods.interactWithObject("Door", Constants.Objects.MASTER_CHEF_DOOR_POSITION, "Open");
+                    script.setStatus("Opening Door.");
+                    methods.interactWithObject("Door", Constants.Objects.MASTER_CHEF_DOOR_POSITION, "Open");
                     break;
             }
         } else {
-            tutorialIslandMethods.clickContinue();
+            methods.clickContinue();
         }
     }
 

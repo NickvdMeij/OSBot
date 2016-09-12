@@ -4,7 +4,6 @@ import com.acescripts.scripts.overloadaio.OverloadAIO;
 import com.acescripts.scripts.overloadaio.framework.Node;
 import com.acescripts.scripts.overloadaio.tutorialisland.methods.CharacterDesign;
 import org.osbot.rs07.api.ui.RS2Widget;
-import org.osbot.rs07.script.Script;
 import org.osbot.rs07.utility.ConditionalSleep;
 
 import java.util.Random;
@@ -17,7 +16,7 @@ import static org.osbot.rs07.script.MethodProvider.sleep;
  */
 
 public class CreateCharacter extends Node{
-    public CreateCharacter(Script script) {
+    public CreateCharacter(OverloadAIO script) {
         super(script);
     }
 
@@ -53,7 +52,7 @@ public class CreateCharacter extends Node{
 
     @Override
     public void execute() throws InterruptedException {
-        OverloadAIO.status = "Designing Character.";
+        script.setStatus("Designing Character.");
 
         Random rn = new Random();
         int max = CharacterDesign.GENDER.getPossibilities();
